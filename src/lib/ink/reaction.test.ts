@@ -20,7 +20,8 @@ describe('Gray-Scott reaction-diffusion', () => {
 		const V = rd.V();
 		const at = (x: number, y: number) => y * 5 + x;
 		// centre: v + 0.5*lv + u*v*v - (k+f)*v with lv = -1, u = v = 1
-		expect(V[at(2, 2)]).toBeCloseTo(1 - 0.5 + 1 - (RD_K + RD_F), 6);
+		// Clamped to 1: the unclamped Gray-Scott update overshoots and diverges to NaN within ~25 steps.
+		expect(V[at(2, 2)]).toBeCloseTo(1, 6);
 		// u + lu - u*v*v + f*(1-u) with lu = 0
 		expect(U[at(2, 2)]).toBeCloseTo(0, 6);
 		expect(V[at(3, 2)]).toBeCloseTo(0.5 * 0.2, 6);

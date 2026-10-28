@@ -31,6 +31,8 @@ export function makeRD(gw: number, gh: number, seedCount: number, seed: number):
 			}
 	}
 
+	/** Keeps the update stable: without it the board's field diverges to NaN. */
+	const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
 	function step() {
 		for (let y = 0; y < gh; y++) {
 			const ym = ((y - 1 + gh) % gh) * gw;
@@ -51,8 +53,8 @@ export function makeRD(gw: number, gh: number, seedCount: number, seed: number):
 				const u = U[i];
 				const v = V[i];
 				const uvv = u * v * v;
-				U2[i] = u + (lu - uvv + RD_F * (1 - u));
-				V2[i] = v + (0.5 * lv + uvv - (RD_K + RD_F) * v);
+				U2[i] = clamp01(u + (lu - uvv + RD_F * (1 - u)));
+				V2[i] = clamp01(v + (0.5 * lv + uvv - (RD_K + RD_F) * v));
 			}
 		}
 		[U, U2] = [U2, U];
