@@ -1,0 +1,43 @@
+:root {
+	--bg: #0d0f10;
+	--panel: #08090a;
+	--paper: #e6e4de;
+	--muted: #8a8c8e;
+	--hair: rgba(230, 228, 222, 0.14);
+	--rim: #3a3d40;
+	--gutter: 16px;
+	--max: 1200px;
+	color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	background: var(--bg);
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--paper);
+	font-family: 'Archivo', system-ui, sans-serif;
+	font-size: 15px;
+	line-height: 1.5;
+	overflow-x: clip;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: inherit;
+}
+
+@media (min-width: 720px) {
+	:root {
+		--gutter: 32px;
+	}
+}
