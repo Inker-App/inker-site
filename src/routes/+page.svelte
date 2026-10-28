@@ -26,7 +26,7 @@
 	<!-- DRAFT copy (meta description): Ben to rewrite. -->
 	<meta
 		name="description"
-		content="INKER keeps your tax forms out of your coding agent's reach and hands it a version with the secrets inked out. Local only, for macOS."
+		content="INKER keeps your tax forms on your Mac and hands your AI chat a version with the secrets inked out. Local only, for macOS."
 	/>
 	<meta property="og:title" content="INKER" />
 	<meta property="og:description" content="You trust your agent too much." />
@@ -47,8 +47,8 @@
 			<h1>You trust your agent too much.</h1>
 			<!-- DRAFT copy: Ben to rewrite. -->
 			<p class="lede">
-				Agents can read your Downloads. INKER keeps your tax forms out of reach and hands them a
-				version with the secrets inked out.
+				Dragging a tax form into a chat sends the whole thing to a server. INKER keeps it on
+				your Mac and hands the chat a version with the secrets inked out.
 			</p>
 		</div>
 	</section>
@@ -87,7 +87,7 @@ BOX 15  STATE             NY</pre>
 	<section class="wrap facts" aria-label="Details">
 		<ul>
 			<li>Local only. Nothing leaves your Mac.</li>
-			<li>Works with Claude Code, Cursor, Codex and anything that speaks MCP.</li>
+			<li>Works with the Claude and ChatGPT apps, and anything that speaks MCP.</li>
 			<li>Open source.</li>
 		</ul>
 	</section>
