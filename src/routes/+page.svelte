@@ -87,7 +87,7 @@ BOX 15  STATE             NY</pre>
 	<section class="wrap facts" aria-label="Details">
 		<ul>
 			<li>Local only. Nothing leaves your Mac.</li>
-			<li>Works with the Claude and ChatGPT apps, and anything that speaks MCP.</li>
+			<li>Works with the Claude app and anything that speaks MCP.</li>
 			<li>Open source.</li>
 		</ul>
 	</section>
