@@ -56,7 +56,7 @@
 	<section class="wrap trade" aria-label="What the agent gets">
 		<div class="panels">
 			<figure class="panel">
-				<figcaption class="label">Your file, on disk</figcaption>
+				<figcaption class="label">Your file</figcaption>
 				<InkCanvas
 					start={redaction}
 					class="w2"
@@ -97,7 +97,7 @@ BOX 15  STATE             NY</pre>
 		<div class="foot-links">
 			<a href="https://github.com/Inker-App/inker">GitHub</a>
 			<!-- DRAFT copy: Ben to confirm. -->
-			<span>macOS · coming soon</span>
+			<span>Coming soon for macOS</span>
 		</div>
 	</footer>
 </main>
