@@ -15,8 +15,8 @@
 		<h1>You trust your agent too much.</h1>
 		<!-- draft -->
 		<p class="lede">
-			Hand your chat a <span class="handle">🐙/</span> handle instead of the file. It gets the numbers
-			it needs. The eyes get ink.
+			Hand your chat a <span class="handle">🐙/</span> handle instead of the file. It gets the amounts it
+			needs and never sees your name, SSN or account numbers.
 		</p>
 		<div class="buttons">
 			<!-- draft -->
@@ -33,8 +33,8 @@
 		<h1 data-avoid>You trust your agent too much.</h1>
 		<!-- draft -->
 		<p class="lede" data-avoid>
-			Hand your chat a <span class="handle">🐙/</span> handle instead of the file. It gets the numbers
-			it needs. The eyes get ink.
+			Hand your chat a <span class="handle">🐙/</span> handle instead of the file. It gets the amounts it
+			needs and never sees your name, SSN or account numbers.
 		</p>
 		<div class="buttons" data-avoid>
 			<!-- draft -->

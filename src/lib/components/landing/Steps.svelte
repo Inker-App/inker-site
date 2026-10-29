@@ -29,12 +29,12 @@
 			<div class="body">
 				<!-- draft -->
 				<div class="title eyed">
-					The chat reads ink <Eye mobile size={64} squint={0.45} style="width: 22px; height: 22px" />
+					Your chat reads the safe copy <Eye mobile size={64} squint={0.45} style="width: 22px; height: 22px" />
 				</div>
 				<!-- draft -->
 				<div class="text">
-					Your chat reads the inked copy. Anything it writes back gets the real values, on your Mac
-					only.
+					Names, SSNs and account numbers are replaced by placeholders. Anything it writes back gets
+					the real values filled in, on your Mac only.
 				</div>
 			</div>
 		</li>
@@ -59,12 +59,12 @@
 			<div class="n">03</div>
 			<!-- draft -->
 			<div class="title eyed">
-				The chat reads ink <Eye size={64} squint={0.45} style="width: 24px; height: 24px" />
+				Your chat reads the safe copy <Eye size={64} squint={0.45} style="width: 24px; height: 24px" />
 			</div>
 			<!-- draft -->
 			<div class="text">
-				It gets the inked copy over MCP. Anything it writes back gets the real values, on your Mac
-				only.
+				Names, SSNs and account numbers are replaced by placeholders. Anything it writes back gets
+				the real values filled in, on your Mac only.
 			</div>
 		</li>
 	</ol>

@@ -25,17 +25,17 @@
 
 <svelte:head>
 	<!-- draft -->
-	<title>INKER hands your AI chat the inked copy</title>
+	<title>INKER</title>
 	<!-- draft -->
 	<meta
 		name="description"
-		content="INKER keeps your tax forms on your Mac and hands your AI chat an inked copy, with tokens in place of your name, SSN and employer. Local only, for macOS."
+		content="INKER keeps your sensitive documents on your Mac and hands your AI chat a copy with your name, SSN and account numbers replaced by placeholders. Local only, for macOS."
 	/>
 	<meta property="og:title" content="INKER" />
 	<!-- draft -->
 	<meta
 		property="og:description"
-		content="INKER keeps your tax forms on your Mac and hands your AI chat an inked copy. Local only, for macOS."
+		content="INKER keeps your sensitive documents on your Mac. Your AI chat gets a copy with the private details replaced by placeholders."
 	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://inker.sh/" />
