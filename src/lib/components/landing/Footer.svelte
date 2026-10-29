@@ -5,7 +5,7 @@
 <footer class="foot" class:m={mobile} data-avoid={mobile ? undefined : ''}>
 	<span>inker.sh</span>
 	<!-- draft -->
-	<span>Your tax forms stay on your Mac.</span>
+	<span>Your sensitive documents stay on your Mac.</span>
 </footer>
 
 <style>
