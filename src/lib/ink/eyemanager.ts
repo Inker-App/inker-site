@@ -191,7 +191,8 @@ export function startEye(el: HTMLCanvasElement, o: EyeOptions = {}): Stop {
 		eyeStep(E, dt, t, tgt ? tgt[0] : null, tgt ? tgt[1] : null, tune, still);
 		const main = new Path2D();
 		const acc = new Path2D();
-		eyeDraw(main, acc, E, C, t, S, S, spec.squint, still ? 0 : (o.wobble ?? 2));
+		// `squint` is read each frame, so a page can open and close an eye.
+		eyeDraw(main, acc, E, C, t, S, S, o.squint ?? spec.squint, still ? 0 : (o.wobble ?? 2));
 		ctx.clearRect(0, 0, S, S);
 		ctx.fillStyle = PAPER;
 		ctx.fill(main);

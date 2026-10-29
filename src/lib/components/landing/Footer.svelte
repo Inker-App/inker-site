@@ -1,11 +1,19 @@
 <script lang="ts">
-	let { mobile = false }: { mobile?: boolean } = $props();
+	// `note` is the right-hand line; /how passes its own.
+	const GITHUB = 'https://github.com/Inker-App/inker';
+	let {
+		mobile = false,
+		note = 'Your sensitive documents stay on your Mac.'
+	}: { mobile?: boolean; note?: string } = $props();
 </script>
 
 <footer class="foot" class:m={mobile} data-avoid={mobile ? undefined : ''}>
-	<span>inker.sh</span>
+	<div class="left">
+		<span>inker.sh</span>
+		<a href={GITHUB}>GitHub</a>
+	</div>
 	<!-- draft -->
-	<span>Your sensitive documents stay on your Mac.</span>
+	<span>{note}</span>
 </footer>
 
 <style>
@@ -24,6 +32,19 @@
 		font-size: 13px;
 		color: var(--muted);
 	}
+	.left {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	a:hover,
+	a:focus-visible {
+		color: var(--paper);
+	}
 	.m {
 		max-width: 528px;
 		padding: 24px 24px 40px;
@@ -31,5 +52,8 @@
 		flex-wrap: nowrap;
 		gap: 0;
 		font-size: 12px;
+	}
+	.m .left {
+		gap: 16px;
 	}
 </style>

@@ -1,12 +1,13 @@
 <script lang="ts">
-	// The "Tide" layer: five eyes against the page edges, behind the content.
+	// The "Tide" layer: eyes against the page edges, behind the content.
 	// fitEyes keeps them clear of every [data-avoid] element; it re-runs when the
 	// root resizes, when the fonts land, and once after the first frame.
 	import { onMount } from 'svelte';
-	import { fitEyes, measureAvoid, TIDE, type Placement } from '#lib/ink/eyemanager.ts';
+	import { fitEyes, measureAvoid, TIDE, type LayoutEye, type Placement } from '#lib/ink/eyemanager.ts';
 	import Eye from './Eye.svelte';
 
-	let { root }: { root: HTMLElement } = $props();
+	// `eyes` is the page's slot list; the landing page uses TIDE.
+	let { root, eyes = TIDE }: { root: HTMLElement; eyes?: LayoutEye[] } = $props();
 
 	interface Slot {
 		x: number;
@@ -16,8 +17,9 @@
 	}
 
 	// Before the first fit: where the layout puts them at 1440, hidden.
+	// svelte-ignore state_referenced_locally
 	let slots: Slot[] = $state(
-		TIDE.map((e) => ({ x: e.side === 'l' ? e.off : 1440 - e.off - e.px, y: e.top, size: e.px, visible: false }))
+		eyes.map((e) => ({ x: e.side === 'l' ? e.off : 1440 - e.off - e.px, y: e.top, size: e.px, visible: false }))
 	);
 
 	const apply = (ps: Placement[]) => {
@@ -29,7 +31,7 @@
 
 	const fit = () => {
 		const r = root.getBoundingClientRect();
-		apply(fitEyes(r, measureAvoid(root), TIDE));
+		apply(fitEyes(r, measureAvoid(root), eyes));
 	};
 
 	onMount(() => {
@@ -46,7 +48,7 @@
 </script>
 
 <div class="layer" aria-hidden="true">
-	{#each TIDE as e, i (i)}
+	{#each eyes as e, i (i)}
 		<Eye
 			size={Math.min(300, e.px)}
 			active={() => slots[i].visible}

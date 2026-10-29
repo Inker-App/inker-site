@@ -39,6 +39,7 @@
 			</div>
 		</li>
 	</ol>
+	<a class="more more-m" href="/how">See exactly what the chat is sent →</a>
 {:else}
 	<ol class="steps d">
 		<li data-avoid>
@@ -68,6 +69,7 @@
 			</div>
 		</li>
 	</ol>
+	<a class="more more-d" href="/how" data-avoid>See exactly what the chat is sent →</a>
 {/if}
 
 <style>
@@ -93,6 +95,27 @@
 	.eyed {
 		display: flex;
 		align-items: center;
+	}
+
+	.more {
+		display: block;
+		width: fit-content;
+		color: var(--muted);
+		text-decoration: none;
+		text-underline-offset: 4px;
+		text-decoration-thickness: 1px;
+	}
+	.more:hover,
+	.more:focus-visible {
+		color: var(--paper);
+		text-decoration: underline;
+	}
+	.more-d {
+		margin: -8px 0 56px;
+	}
+	.more-m {
+		margin: -12px 0 40px;
+		font-size: 14px;
 	}
 
 	.d {

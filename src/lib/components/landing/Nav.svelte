@@ -2,21 +2,42 @@
 	import InkCanvas from '#lib/components/InkCanvas.svelte';
 	import { start as lockup } from '#lib/ink/lockup.ts';
 
-	let { mobile = false }: { mobile?: boolean } = $props();
+	// On /how the lockup links home and "How it works" is the current page.
+	let { mobile = false, page = 'home' }: { mobile?: boolean; page?: 'home' | 'how' } = $props();
 	const GITHUB = 'https://github.com/Inker-App/inker';
 </script>
 
+{#snippet lock()}
+	{#if page === 'how'}
+		<a class="home" href="/"><InkCanvas start={lockup} label="INKER" class="lock" /></a>
+	{:else}
+		<InkCanvas start={lockup} label="INKER" class="lock" />
+	{/if}
+{/snippet}
+
+{#snippet how()}
+	{#if page === 'how'}
+		<span class="current" aria-current="page">How it works</span>
+	{:else}
+		<a href="/how">How it works</a>
+	{/if}
+{/snippet}
+
 {#if mobile}
 	<nav class="nav m">
-		<InkCanvas start={lockup} label="INKER" class="lock" />
-		<a href={GITHUB}>GitHub</a>
+		{@render lock()}
+		<div class="links">
+			{@render how()}
+			<a href={GITHUB}>GitHub</a>
+		</div>
 	</nav>
 {:else}
 	<nav class="nav d" data-avoid>
-		<InkCanvas start={lockup} label="INKER" class="lock" />
+		{@render lock()}
 		<div class="links">
+			{@render how()}
 			<a href={GITHUB}>GitHub</a>
-			<span>macOS · coming soon</span>
+			{#if page === 'home'}<span>macOS · coming soon</span>{/if}
 		</div>
 	</nav>
 {/if}
@@ -43,6 +64,9 @@
 		width: 120px;
 		height: 24px;
 	}
+	.home {
+		display: block;
+	}
 	.links {
 		display: flex;
 		align-items: center;
@@ -50,13 +74,19 @@
 		font-size: 13px;
 		color: var(--muted);
 	}
-	a {
+	.m .links {
+		gap: 16px;
+	}
+	.links a {
 		font-size: 13px;
 		color: var(--muted);
 		text-decoration: none;
 	}
-	a:hover,
-	a:focus-visible {
+	.links a:hover,
+	.links a:focus-visible {
+		color: var(--paper);
+	}
+	.current {
 		color: var(--paper);
 	}
 </style>
