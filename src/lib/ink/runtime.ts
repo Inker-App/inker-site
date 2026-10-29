@@ -35,9 +35,12 @@ export interface MotionState {
 }
 
 /** Should the loop run, and should a still frame be drawn instead? */
-export function motionPlan(s: MotionState): { run: boolean; still: boolean } {
+export function motionPlan(
+	s: MotionState,
+	o: { reducedRuns?: boolean } = {}
+): { run: boolean; still: boolean } {
 	if (!s.alive) return { run: false, still: false };
-	if (s.reduced) return { run: false, still: true };
+	if (s.reduced && !o.reducedRuns) return { run: false, still: true };
 	return { run: s.inView && s.visible, still: false };
 }
 
@@ -49,6 +52,11 @@ export function clampDt(now: number, last: number): number {
 export interface AnimateOptions {
 	/** Time (seconds) of the frame drawn when motion is reduced. */
 	still: number;
+	/**
+	 * Keep the loop running under prefers-reduced-motion; the frame reads
+	 * `reducedMotion()` and freezes itself (still eyes that only blink).
+	 */
+	reducedRuns?: boolean;
 	/** Called on mount and whenever the canvas changes size, before the redraw. */
 	onResize?: () => void;
 }
@@ -77,16 +85,19 @@ export function animate(el: HTMLCanvasElement, frame: Frame, o: AnimateOptions):
 	};
 	const drawOnce = () => {
 		if (!alive) return;
-		if (mq.matches) frame(1, o.still);
+		if (mq.matches && !o.reducedRuns) frame(1, o.still);
 		else frame(0, (performance.now() - t0) / 1000);
 	};
 	const update = () => {
-		const plan = motionPlan({
-			alive,
-			reduced: mq.matches,
-			inView,
-			visible: document.visibilityState === 'visible'
-		});
+		const plan = motionPlan(
+			{
+				alive,
+				reduced: mq.matches,
+				inView,
+				visible: document.visibilityState === 'visible'
+			},
+			{ reducedRuns: o.reducedRuns }
+		);
 		const want = plan.run;
 		if (want && !running) {
 			running = true;
@@ -129,4 +140,9 @@ export function animate(el: HTMLCanvasElement, frame: Frame, o: AnimateOptions):
 		document.removeEventListener('visibilitychange', update);
 		mq.removeEventListener('change', update);
 	};
+}
+
+/** True when the visitor asked for reduced motion. */
+export function reducedMotion(): boolean {
+	return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

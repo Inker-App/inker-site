@@ -34,3 +34,13 @@ describe('clampDt', () => {
 		expect(clampDt(900, 1000)).toBe(0);
 	});
 });
+
+describe('motionPlan with reducedRuns', () => {
+	it('keeps the loop going under reduced motion for renderers that freeze themselves', () => {
+		expect(motionPlan({ ...base, reduced: true }, { reducedRuns: true })).toEqual({ run: true, still: false });
+		expect(motionPlan({ ...base, reduced: true, inView: false }, { reducedRuns: true })).toEqual({
+			run: false,
+			still: false
+		});
+	});
+});

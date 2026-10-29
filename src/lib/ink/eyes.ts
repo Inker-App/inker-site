@@ -101,9 +101,9 @@ export function gazeVector(yaw: number, pitch: number): [number, number, number]
 	return [Math.sin(yaw) * cp, Math.sin(pitch), Math.cos(yaw) * cp];
 }
 
-/** Ease yaw and pitch toward their targets (rate 18/s, snaps when dt >= 1/18). */
-export function turn(E: { yaw: number; pitch: number; ty: number; tp: number }, dt: number) {
-	const k = Math.min(1, dt * 18);
+/** Ease yaw and pitch toward their targets (rate 18/s by default, snaps when dt >= 1/rate). */
+export function turn(E: { yaw: number; pitch: number; ty: number; tp: number }, dt: number, rate = 18) {
+	const k = Math.min(1, dt * rate);
 	E.yaw += (E.ty - E.yaw) * k;
 	E.pitch += (E.tp - E.pitch) * k;
 }
@@ -327,4 +327,178 @@ export function start(el: HTMLCanvasElement, opts: EyesOptions = {}): Stop {
 		el.removeEventListener('pointerup', onTouchEnd);
 		el.removeEventListener('pointercancel', onTouchEnd);
 	};
+}
+
+// ---------------------------------------------------------------------------
+// Page eyes: the single eyes of the landing page (layout eyes, demo eyes, step
+// and facts-band eyes), ported from `mkEye` / `eyeStep` / `eyeDraw` in
+// landing-desktop.html and landing-mobile.html.
+
+export interface EyeTuning {
+	/** How far in front of the screen the gaze target sits, px. */
+	depth: number;
+	/** Turn easing rate, 1/s. */
+	ease: number;
+	/** Next saccade comes nextMin + r * nextSpan seconds later. */
+	nextMin: number;
+	nextSpan: number;
+	/** Chance a saccade starts a dart that ignores the target for 0.3-0.9 s. */
+	dartChance: number;
+}
+
+export const PAGE_TUNING: EyeTuning = { depth: 170, ease: 16, nextMin: 0.6, nextSpan: 2.4, dartChance: 0.3 };
+export const PAGE_TUNING_MOBILE: EyeTuning = { ...PAGE_TUNING, depth: 90 };
+
+export interface PageEye {
+	x: number;
+	y: number;
+	R: number;
+	yaw: number;
+	pitch: number;
+	ty: number;
+	tp: number;
+	ry: number;
+	rp: number;
+	next: number;
+	dart: number;
+	bt: number;
+	nb: number;
+	ph: number;
+	spin: number;
+	lid: number;
+	r: () => number;
+}
+
+export function mkEye(x: number, y: number, R: number, r: () => number): PageEye {
+	return {
+		x,
+		y,
+		R,
+		yaw: 0,
+		pitch: 0,
+		ty: 0,
+		tp: 0,
+		ry: 0,
+		rp: 0,
+		next: r() * 2,
+		dart: 0,
+		bt: -1,
+		nb: 1 + r() * 4,
+		ph: r() * 6.283,
+		spin: r() * 6.283,
+		lid: 0,
+		r
+	};
+}
+
+/**
+ * Advance one eye. With a target (tx, ty) in the eye's own coordinates it looks
+ * there, except while darting; without one it wanders. `still` (reduced motion)
+ * holds the gaze straight ahead and only blinks.
+ */
+export function eyeStep(
+	E: PageEye,
+	dt: number,
+	t: number,
+	tx: number | null,
+	ty: number | null,
+	tune: EyeTuning,
+	still = false
+) {
+	const r = E.r;
+	if (still) {
+		E.ty = 0;
+		E.tp = 0;
+	} else {
+		if (t > E.next) {
+			E.next = t + tune.nextMin + r() * tune.nextSpan;
+			E.dart = r() < tune.dartChance ? t + 0.3 + r() * 0.6 : 0;
+			E.ry = (r() - 0.5) * 1.6;
+			E.rp = (r() - 0.5) * 0.8;
+		}
+		if (tx != null && ty != null && t > E.dart) {
+			const g = gazeAngles(E.x, E.y, tx, ty, tune.depth);
+			E.ty = g.yaw;
+			E.tp = g.pitch;
+		} else {
+			E.ty = E.ry;
+			E.tp = E.rp;
+		}
+	}
+	turn(E, dt, tune.ease);
+	E.lid = blinkStep(E, t, false, r);
+}
+
+/** Cell size of a page eye of diameter `size`: about size/14, at least 3 px. */
+export function eyeCell(size: number): number {
+	return Math.max(3, Math.round(size / 14));
+}
+
+export type DotSink = (iris: boolean, x: number, y: number, b: number) => void;
+
+/**
+ * Shade one page eye on a C px grid inside a W x H canvas, handing each dot to
+ * `put`. `squint` holds the lid at least that shut; `wobble` is the drift
+ * amplitude in px (2 desktop, 1.5 mobile, 0 under reduced motion).
+ */
+export function eyeDots(
+	E: PageEye,
+	C: number,
+	t: number,
+	W: number,
+	H: number,
+	squint: number,
+	wobble: number,
+	put: DotSink
+) {
+	const cx = E.x + Math.sin(t * 0.7 + E.ph) * wobble;
+	const cy = E.y + Math.cos(t * 0.9 + E.ph) * wobble;
+	const R = E.R;
+	const lid = Math.max(E.lid, squint || 0);
+	const [gx, gy, gz] = gazeVector(E.yaw, E.pitch);
+	const i0 = Math.max(0, Math.floor((cx - R) / C));
+	const i1 = Math.min(Math.floor(W / C) - 1, Math.ceil((cx + R) / C));
+	const j0 = Math.max(0, Math.floor((cy - R) / C));
+	const j1 = Math.min(Math.floor(H / C) - 1, Math.ceil((cy + R) / C));
+	for (let j = j0; j <= j1; j++)
+		for (let i = i0; i <= i1; i++) {
+			const px = (i + 0.5) * C;
+			const py = (j + 0.5) * C;
+			const dx = (px - cx) / R;
+			const dy = (py - cy) / R;
+			const d2 = dx * dx + dy * dy;
+			if (d2 > 1) continue;
+			const z = Math.sqrt(1 - d2);
+			const lam = Math.max(0, dx * LGT[0] + dy * LGT[1] + z * LGT[2]);
+			const sp = Math.pow(Math.max(0, dx * HV[0] + dy * HV[1] + z * HV[2]), 48);
+			let b: number;
+			let isI = false;
+			if (Math.abs(dy) > 1 - lid) b = 0.05 + 0.3 * lam;
+			else {
+				const ca = dx * gx + dy * gy + z * gz;
+				if (ca > 0.955) b = sp * 0.35;
+				else if (ca > 0.83) {
+					const ang = Math.atan2(dy - gy * ca, dx - gx * ca);
+					b = (0.32 + 0.48 * lam) * (0.72 + 0.28 * Math.sin(ang * 14 + E.spin)) * ss(0.83, 0.85, ca) + sp * 0.3;
+					isI = true;
+				} else b = (0.08 + 0.72 * lam) * (0.55 + 0.45 * Math.sqrt(z)) + sp * 0.3;
+			}
+			if (b < 0.015) continue;
+			put(isI, px, py, b);
+		}
+}
+
+/** Draw a page eye's dots into two paths: paper (`main`) and iris (`acc`). */
+export function eyeDraw(
+	main: Path2D,
+	acc: Path2D,
+	E: PageEye,
+	C: number,
+	t: number,
+	W: number,
+	H: number,
+	squint: number,
+	wobble: number
+) {
+	eyeDots(E, C, t, W, H, squint, wobble, (iris, x, y, b) => dot(iris ? acc : main, x, y, b, C));
 }
