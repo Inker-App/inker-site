@@ -34,6 +34,16 @@ fine-grained token with Contents: read on `Inker-App/inker`); locally,
 `[templates] using the built-in counts` and uses the numbers in `templates.ts`. The INKER repo's
 `site-rebuild` workflow asks Vercel for a build when `packs/**` changes.
 
+## Download button
+
+The landing page's download button and the nav status name the newest INKER release.
+`src/routes/+page.server.ts` reads `/releases` from the GitHub API at build time (not
+`/releases/latest`, which skips pre-releases), takes the newest non-draft and links its
+`*-macos.dmg` (else `*-macos.zip`). A pre-release gets a "not a stable version" note. With `GITHUB_TOKEN` unset
+or GitHub unreachable the build logs `[release] linking the releases page` and the button
+links `/releases` with no version. The INKER repo's `site-rebuild` workflow also asks Vercel
+for a build when a release is published.
+
 ## Commands
 
 ```sh

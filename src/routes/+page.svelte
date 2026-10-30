@@ -12,6 +12,9 @@
 	import Nav from '#lib/components/landing/Nav.svelte';
 	import Steps from '#lib/components/landing/Steps.svelte';
 	import { matchMedia } from '#lib/media.ts';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
 
 	const phone = matchMedia('(max-width: 639.98px)');
 	let root: HTMLElement | undefined = $state();
@@ -45,8 +48,8 @@
 	<div class="root desktop" class:both={!mounted} data-root bind:this={root}>
 		{#if mounted && root}<EyeLayer {root} />{/if}
 		<div class="wrap">
-			<Nav />
-			<Hero />
+			<Nav release={data.release} />
+			<Hero release={data.release} />
 			<LineDemo />
 			<Steps />
 		</div>
@@ -57,8 +60,8 @@
 {#if showPhone}
 	<div class="root phone" class:both={!mounted}>
 		<div class="mwrap">
-			<Nav mobile />
-			<Hero mobile />
+			<Nav mobile release={data.release} />
+			<Hero mobile release={data.release} />
 			<LineDemo mobile />
 			<Steps mobile />
 		</div>

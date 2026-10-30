@@ -1,9 +1,17 @@
 <script lang="ts">
 	import InkCanvas from '#lib/components/InkCanvas.svelte';
 	import { start as lockup } from '#lib/ink/lockup.ts';
+	import { FALLBACK, type Release } from '#lib/release.ts';
 
 	// On /how the lockup links home and "How it works" is the current page.
-	let { mobile = false, page = 'home' }: { mobile?: boolean; page?: 'home' | 'how' } = $props();
+	let {
+		mobile = false,
+		page = 'home',
+		release = FALLBACK
+	}: { mobile?: boolean; page?: 'home' | 'how'; release?: Release } = $props();
+	const status = $derived(
+		release.version ? `macOS · v${release.version}${release.prerelease ? ' pre-release' : ''}` : 'macOS'
+	);
 	const GITHUB = 'https://github.com/Inker-App/inker';
 </script>
 
@@ -37,7 +45,7 @@
 		<div class="links">
 			{@render how()}
 			<a href={GITHUB}>GitHub</a>
-			{#if page === 'home'}<span>macOS · coming soon</span>{/if}
+			{#if page === 'home'}<span>{status}</span>{/if}
 		</div>
 	</nav>
 {/if}

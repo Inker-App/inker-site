@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { FALLBACK, type Release } from '#lib/release.ts';
 	import Eye from './Eye.svelte';
 
-	let { mobile = false }: { mobile?: boolean } = $props();
+	let { mobile = false, release = FALLBACK }: { mobile?: boolean; release?: Release } = $props();
 	const GITHUB = 'https://github.com/Inker-App/inker';
 </script>
 
@@ -20,8 +21,14 @@
 			<!-- draft -->
 			<a class="btn fill" href={GITHUB}>Star on GitHub</a>
 			<!-- draft -->
-			<span class="btn line">macOS app coming soon</span>
+			<a class="btn line" href={release.href}>
+				Download for macOS{#if release.version}<span class="ver">v{release.version}</span>{/if}
+			</a>
 		</div>
+		{#if release.prerelease}
+			<!-- draft -->
+			<p class="note">This is a pre-release and not a stable version yet.</p>
+		{/if}
 	</section>
 {:else}
 	<section class="hero d">
@@ -36,8 +43,14 @@
 			<!-- draft -->
 			<a class="btn fill" href={GITHUB}>Star on GitHub</a>
 			<!-- draft -->
-			<span class="btn line">macOS app coming soon</span>
+			<a class="btn line" href={release.href}>
+				Download for macOS{#if release.version}<span class="ver">v{release.version}</span>{/if}
+			</a>
 		</div>
+		{#if release.prerelease}
+			<!-- draft -->
+			<p class="note">This is a pre-release and not a stable version yet.</p>
+		{/if}
 	</section>
 {/if}
 
@@ -81,7 +94,22 @@
 		background: #fff;
 	}
 	.line {
+		gap: 10px;
 		border: 1px solid rgba(230, 228, 222, 0.2);
+		color: var(--paper);
+	}
+	.line:hover,
+	.line:focus-visible {
+		border-color: rgba(230, 228, 222, 0.5);
+	}
+	.ver {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 12px;
+		color: var(--muted);
+	}
+	.note {
+		margin: 0;
+		font-size: 12px;
 		color: var(--muted);
 	}
 
