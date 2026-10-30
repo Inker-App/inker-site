@@ -9,8 +9,6 @@
 	<section class="hero m">
 		<Eye mobile size={96} style="position: absolute; right: -6px; top: 14px; width: 46px; height: 46px" />
 		<Eye mobile size={64} style="position: absolute; right: 56px; top: 30px; width: 20px; height: 20px" />
-		<!-- draft -->
-		<div class="label">FOR ANY AI CHAT THAT SPEAKS MCP</div>
 		<!-- Ben's line, unchanged. -->
 		<h1>You trust your agent too much.</h1>
 		<!-- draft -->
@@ -27,8 +25,6 @@
 	</section>
 {:else}
 	<section class="hero d">
-		<!-- draft -->
-		<div class="label" data-avoid>FOR ANY AI CHAT THAT SPEAKS MCP</div>
 		<!-- Ben's line, unchanged. -->
 		<h1 data-avoid>You trust your agent too much.</h1>
 		<!-- draft -->
@@ -50,12 +46,6 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-	}
-	.label {
-		font-weight: 600;
-		font-stretch: 125%;
-		letter-spacing: 0.2em;
-		color: var(--muted);
 	}
 	h1 {
 		margin: 0;
@@ -102,9 +92,6 @@
 		text-align: center;
 		gap: 20px;
 	}
-	.d .label {
-		font-size: 11px;
-	}
 	.d h1 {
 		max-width: 12em;
 		font-size: clamp(40px, 5.6vw, 76px);
@@ -136,9 +123,6 @@
 	.m {
 		padding: 56px 0 0;
 		gap: 16px;
-	}
-	.m .label {
-		font-size: 10px;
 	}
 	.m h1 {
 		font-size: 40px;
